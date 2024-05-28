@@ -21,6 +21,11 @@ public class BossAttack : MonoBehaviour
     public GameObject powerfulProjectile; // Novo projétil mais poderoso
     public float powerfulProjectileDamage = 50f; // Dano do projétil mais poderoso
 
+    // Audio
+    public AudioClip robotWalkSound;
+    private AudioSource audioSource;
+    private bool isMoving = false;
+
     // States
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
@@ -32,6 +37,13 @@ public class BossAttack : MonoBehaviour
     {
         player = GameObject.Find("AngryJohn").transform;
         agent = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = robotWalkSound;
+    }
+
+    private void Start()
+    {
+        agent.updatePosition = false; // Desativa a atualização automática da posição do agente
     }
 
     private void Update()
@@ -43,6 +55,30 @@ public class BossAttack : MonoBehaviour
         if (!playerInSightRange && !playerInAttackRange) Patroling();
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         if (playerInAttackRange && playerInSightRange) AttackPlayer();
+
+        // Atualize a posição manualmente
+        agent.nextPosition = transform.position;
+    }
+
+    private void LateUpdate()
+    {
+        // Verifique se o agente está se movendo
+        if (agent.hasPath && agent.velocity.sqrMagnitude > 0f)
+        {
+            if (!isMoving)
+            {
+                isMoving = true;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            if (isMoving)
+            {
+                isMoving = false;
+                audioSource.Stop();
+            }
+        }
     }
 
     private void Patroling()
