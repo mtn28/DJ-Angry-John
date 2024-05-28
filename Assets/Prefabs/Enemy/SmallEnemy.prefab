@@ -77,13 +77,15 @@ GameObject:
   - component: {fileID: 598790026168348584}
   - component: {fileID: 2801862100014750647}
   - component: {fileID: 6853704304325720420}
+  - component: {fileID: 6524052727655563793}
+  - component: {fileID: 3152231423247575417}
   m_Layer: 0
   m_Name: SmallEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4682134672128162501
 Transform:
   m_ObjectHideFlags: 0
@@ -168,11 +170,46 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
   timeBetweenAttacks: 0.5
-  projectile: {fileID: 1172261492053980, guid: 653118c2191c241438e8f0494b2438c8, type: 3}
+  projectile: {fileID: 4984500230177365158, guid: 2c7c7fd933570844280559c76c9ac393, type: 3}
   sightRange: 20
   attackRange: 12
   playerInSightRange: 0
   playerInAttackRange: 0
+--- !u!114 &6524052727655563793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364196406829626924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca327acbac5293488f39a1ed416aed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &3152231423247575417
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364196406829626924}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.27451578
+  m_Height: 0.95594406
+  m_Direction: 1
+  m_Center: {x: -0.003519694, y: 0.44515166, z: 0}
 --- !u!1 &403845554500970989
 GameObject:
   m_ObjectHideFlags: 0
