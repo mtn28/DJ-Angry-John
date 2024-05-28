@@ -28,7 +28,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
-
+		public HealthManager healthManager;
+		private Animator myAnimation;
 
 		void Start()
 		{
@@ -40,6 +41,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
+
+			healthManager = FindObjectOfType<HealthManager>();
+			myAnimation = GetComponent<Animator>();
 		}
 
 
@@ -198,6 +202,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 
+		private void OnCollisionEnter(Collision collision)
+		{
+			if (collision.gameObject.tag == "Enemy")
+			{
+				myAnimation.SetTrigger("Hit0");
+				healthManager.LoseHealth(10);
+				//hurtSound.Play();
+			}
+			else if (collision.gameObject.tag == "EnemyRocket")
+			{
+				myAnimation.SetTrigger("Hit0");
+				healthManager.LoseHealth(40);
+				//hurtSound.Play();
+			}
+		}
 
 		void CheckGroundStatus()
 		{

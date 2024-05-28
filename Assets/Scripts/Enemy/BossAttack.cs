@@ -170,6 +170,16 @@ public class BossAttack : MonoBehaviour
         if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
 
+    private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.tag == "JohnBullet")
+            {
+                //myAnimation.SetTrigger("");
+                TakeDamage(50);
+                //hurtSound.Play();
+            }
+        }
+
     private void DestroyEnemy()
     {
         Destroy(gameObject);

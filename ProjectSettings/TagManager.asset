@@ -6,6 +6,9 @@ TagManager:
   tags:
   - World
   - Enemy
+  - Banana
+  - JohnBullet
+  - EnemyRocket
   layers:
   - Default
   - TransparentFX
