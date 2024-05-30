@@ -1,6 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Gun : MonoBehaviour
 {
@@ -8,44 +9,119 @@ public class Gun : MonoBehaviour
     public GameObject bulletPrefab;
     public float bulletSpeed = 10;
     public float fireRate = 1.0f;
-    private float nextFireTime = 0.0f;
+    public int maxBullets = 10;
+    public float reloadTime = 5.0f;
     public GameObject muzzleFlash;
     public Transform muzzleFlashPosition;
-    public Camera playerCamera; // Referência à câmera do jogador
+    public Camera playerCamera;
+    public TextMeshProUGUI ammoText; // Referência ao TextMeshPro no HUD
+    public Slider reloadSlider; // Barra de recarga
+    public AudioSource audioSource; // Componente de áudio
+    public AudioClip shootSound; // Som de disparo
+    public AudioClip emptyGunSound; // Som de arma vazia
+
+    private float nextFireTime = 0.0f;
+    private int bulletsFired = 0;
+    private bool isReloading = false;
+
+    void Start()
+    {
+        UpdateAmmoText();
+        reloadSlider.gameObject.SetActive(false); // Desativa a barra de recarga inicialmente
+    }
 
     void Update()
     {
-        // Verifica se o tempo atual é maior que o tempo do próximo disparo
-        if (Time.time >= nextFireTime)
+        if (isReloading)
         {
-            // Se o botão esquerdo do mouse for pressionado
             if (Input.GetMouseButtonDown(0))
             {
-                // Define o tempo do próximo disparo como o tempo atual mais o intervalo de tempo entre os disparos
-                nextFireTime = Time.time + fireRate;
-                GameObject Muzzle = Instantiate(muzzleFlash, muzzleFlashPosition);
-                Destroy(Muzzle, 0.2f);
-                
-                // Raycast a partir da câmera
-                Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                Vector3 targetPoint;
+                PlayEmptyGunSound();
+            }
+            return;
+        }
 
-                if (Physics.Raycast(ray, out hit))
+        if (Time.time >= nextFireTime)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (bulletsFired < maxBullets)
                 {
-                    targetPoint = hit.point;
+                    FireBullet();
+                    bulletsFired++;
+                    UpdateAmmoText(); // Atualiza o texto após cada disparo
+
+                    if (bulletsFired >= maxBullets)
+                    {
+                        StartCoroutine(Reload());
+                    }
+                    else
+                    {
+                        nextFireTime = Time.time + fireRate;
+                    }
                 }
                 else
                 {
-                    targetPoint = ray.GetPoint(1000); // Algum ponto distante se não houver colisão
+                    PlayEmptyGunSound();
                 }
-
-                Vector3 direction = (targetPoint - bulletSpawnPoint.position).normalized;
-
-                // Instancia a bala e define sua velocidade
-                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(direction));
-                bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
             }
         }
+    }
+
+    private void FireBullet()
+    {
+        GameObject Muzzle = Instantiate(muzzleFlash, muzzleFlashPosition);
+        Destroy(Muzzle, 0.2f);
+
+        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(1000);
+        }
+
+        Vector3 direction = (targetPoint - bulletSpawnPoint.position).normalized;
+
+        var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(direction));
+        bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+
+        audioSource.PlayOneShot(shootSound); // Toca o som de disparo
+    }
+
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+        reloadSlider.gameObject.SetActive(true);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < reloadTime)
+        {
+            elapsedTime += Time.deltaTime;
+            reloadSlider.value = elapsedTime / reloadTime; // Atualiza a barra de recarga
+            yield return null;
+        }
+
+        bulletsFired = 0;
+        nextFireTime = Time.time + fireRate; // Permite disparar imediatamente após recarregar
+        UpdateAmmoText(); // Atualiza o texto após recarregar
+        isReloading = false;
+        reloadSlider.gameObject.SetActive(false); // Desativa a barra de recarga
+    }
+
+    private void UpdateAmmoText()
+    {
+        ammoText.text = (maxBullets - bulletsFired).ToString();
+    }
+
+    private void PlayEmptyGunSound()
+    {
+        audioSource.PlayOneShot(emptyGunSound); // Toca o som de arma vazia
     }
 }

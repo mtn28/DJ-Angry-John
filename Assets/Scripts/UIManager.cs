@@ -25,20 +25,24 @@ public class UIManager : MonoBehaviour
         HUDScreen.SetActive(true);
     }
 
-    void Start()
-    {
-    }
-
     private void Update()
     {
-        // Verifica se a tecla Esc foi pressionada e se o jogo não terminou
-        if (Input.GetKeyDown(KeyCode.Escape) && !isOptions)
+        // Verifica se a tecla Esc foi pressionada
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // Se a tela de pausa estiver ativa, desativa-a, caso contrário, ativa-a
-            PauseGame(!pauseScreen.activeInHierarchy);
+            if (isOptions)
+            {
+                // Se estiver no menu de opções, volta para o menu de pausa
+                BackToPauseMenu();
+            }
+            else
+            {
+                // Se estiver no jogo, ativa ou desativa a tela de pausa
+                PauseGame(!pauseScreen.activeInHierarchy);
+            }
         }
 
-        // Esconde o HUD se o jogo estiver pausado
+        // Esconde o HUD se o jogo estiver pausado ou no menu de opções
         if (pauseScreen.activeInHierarchy || isOptions)
         {
             // Pausa a música de fundo
@@ -90,8 +94,27 @@ public class UIManager : MonoBehaviour
     {
         // Ativa ou desativa a tela de pausa
         pauseScreen.SetActive(status);
+        isOptions = false;
+        optionsScreen.SetActive(false);
+
         // Quando a pausa está ativada, o timescale é definido como 0 e o tempo está parado
         // Quando está desativada, o timescale é definido como 1 e o tempo continua normalmente
         Time.timeScale = status ? 0 : 1;
+    }
+
+    // Método para voltar ao menu de pausa a partir do menu de opções
+    public void BackToPauseMenu()
+    {
+        isOptions = false;
+        optionsScreen.SetActive(false);
+        pauseScreen.SetActive(true);
+    }
+
+    // Método para ir ao menu de opções a partir do menu de pausa
+    public void GoToOptionsMenu()
+    {
+        isOptions = true;
+        optionsScreen.SetActive(true);
+        pauseScreen.SetActive(false);
     }
 }
