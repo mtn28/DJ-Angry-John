@@ -18,6 +18,10 @@ public class EnemyAttack : MonoBehaviour
     public float timeBetweenAttacks;
     bool alreadyAttacked;
     public GameObject projectile;
+    
+    public AudioClip bulletSound;
+    public float bulletSoundVolume = 1.0f; // Volume da bala ajustável
+    private AudioSource audioSource;
 
     // States
     public float sightRange, attackRange;
@@ -27,6 +31,7 @@ public class EnemyAttack : MonoBehaviour
     {
         player = GameObject.Find("AngryJohn").transform;
         agent = GetComponent<NavMeshAgent>();
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void Update()
@@ -102,6 +107,12 @@ public class EnemyAttack : MonoBehaviour
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
+
+            // Play the bullet sound
+            if (bulletSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(bulletSound, bulletSoundVolume);
+            }
         }
     }
 

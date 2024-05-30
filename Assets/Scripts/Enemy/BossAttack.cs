@@ -28,10 +28,15 @@ public class BossAttack : MonoBehaviour
     private float powerfulProjectileCooldown = 12f;
     private bool canShootPowerfulProjectile = true;
 
+        public AudioClip bulletSound;
+    public float bulletSoundVolume = 1.0f; // Volume da bala ajustável
+    private AudioSource audioSource;
+
     private void Awake()
     {
         player = GameObject.Find("AngryJohn").transform;
         agent = GetComponent<NavMeshAgent>();
+                audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void Update()
@@ -92,6 +97,11 @@ public class BossAttack : MonoBehaviour
             else
             {
                 ShootRegularProjectile();
+                                    // Play the bullet sound
+            if (bulletSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(bulletSound, bulletSoundVolume);
+            }
             }
 
             alreadyAttacked = true;

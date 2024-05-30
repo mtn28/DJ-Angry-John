@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 6853704304325720420}
   - component: {fileID: 6524052727655563793}
   - component: {fileID: 3152231423247575417}
+  - component: {fileID: -1709914138400652544}
   m_Layer: 0
   m_Name: SmallEnemy
   m_TagString: Untagged
@@ -172,6 +173,8 @@ MonoBehaviour:
   walkPointRange: 0
   timeBetweenAttacks: 0.5
   projectile: {fileID: 4984500230177365158, guid: 2c7c7fd933570844280559c76c9ac393, type: 3}
+  bulletSound: {fileID: 8300000, guid: 0839c3662054b0c45833688a833c23b4, type: 3}
+  bulletSoundVolume: 1
   sightRange: 20
   attackRange: 12
   playerInSightRange: 0
@@ -188,6 +191,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca327acbac5293488f39a1ed416aed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSound: {fileID: 8300000, guid: b9b7a23e710ee714fab822ffad660595, type: 3}
+  moveSoundVolume: 1
 --- !u!136 &3152231423247575417
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -211,6 +216,102 @@ CapsuleCollider:
   m_Height: 0.95594406
   m_Direction: 1
   m_Center: {x: -0.003519694, y: 0.44515166, z: 0}
+--- !u!82 &-1709914138400652544
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364196406829626924}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: b9b7a23e710ee714fab822ffad660595, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.4
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &403845554500970989
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,7 +931,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0}
-  m_SizeDelta: {x: 15, y: 15}
+  m_SizeDelta: {x: 25, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5370632516013100123
 CanvasRenderer:

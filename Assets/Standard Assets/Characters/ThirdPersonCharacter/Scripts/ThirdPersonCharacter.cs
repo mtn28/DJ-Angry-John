@@ -31,6 +31,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public HealthManager healthManager;
 		private Animator myAnimation;
 
+		public CheckpointManager checkpointManager; // Referência ao CheckpointManager
 		void Start()
 		{
 			m_Animator = GetComponent<Animator>();
@@ -44,6 +45,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			healthManager = FindObjectOfType<HealthManager>();
 			myAnimation = GetComponent<Animator>();
+
+			checkpointManager = FindObjectOfType<CheckpointManager>();
 		}
 
 
@@ -238,6 +241,25 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_IsGrounded = false;
 				m_GroundNormal = Vector3.up;
 				m_Animator.applyRootMotion = false;
+			}
+		}
+
+		public void Die()
+		{
+			Respawn();
+		}
+
+		public void Respawn()
+		{
+			if (checkpointManager != null)
+			{
+				Vector3 respawnPosition = checkpointManager.GetRespawnPosition();
+				transform.position = respawnPosition;
+				healthManager.ResetHealth();
+			}
+			else
+			{
+				Debug.LogError("CheckpointManager não definido! Verifique se você atribuiu o objeto CheckpointManager ao script ThirdPersonCharacter.");
 			}
 		}
 	}
