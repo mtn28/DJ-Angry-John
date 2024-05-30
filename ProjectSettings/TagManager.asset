@@ -9,6 +9,8 @@ TagManager:
   - Banana
   - JohnBullet
   - EnemyRocket
+  - RespawnPoint
+  - DemoEnd
   layers:
   - Default
   - TransparentFX

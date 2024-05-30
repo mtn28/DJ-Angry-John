@@ -99,7 +99,7 @@ public class EnemyAttack : MonoBehaviour
             }
 
             // Adjust the direction to shoot slightly downward
-            Vector3 forceDirection = transform.forward + transform.up * -0.1f; // Adjust the -0.1f to control how much downward force is applied
+            Vector3 forceDirection = transform.forward + transform.up * 0.1f; // Adjust the -0.1f to control how much downward force is applied
             rb.AddForce(forceDirection.normalized * 32f, ForceMode.Impulse);
 
             Destroy(newProjectile, 5f);

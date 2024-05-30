@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: -1709914138400652544}
   m_Layer: 0
   m_Name: SmallEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,10 +168,10 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
+  health: 100
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
-  timeBetweenAttacks: 0.5
+  timeBetweenAttacks: 2
   projectile: {fileID: 4984500230177365158, guid: 2c7c7fd933570844280559c76c9ac393, type: 3}
   bulletSound: {fileID: 8300000, guid: 0839c3662054b0c45833688a833c23b4, type: 3}
   bulletSoundVolume: 1
