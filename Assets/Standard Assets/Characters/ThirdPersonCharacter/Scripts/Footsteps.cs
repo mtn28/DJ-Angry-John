@@ -18,6 +18,7 @@ public class Footsteps : MonoBehaviour
     void Start()
     {
         footstep.SetActive(false);
+        footstepSound.loop = true; // Habilita o loop para o som dos passos
     }
 
     // Update is called once per frame

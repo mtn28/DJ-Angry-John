@@ -2210,7 +2210,6 @@ GameObject:
   - component: {fileID: 2377092977920609768}
   - component: {fileID: 4788003214416505364}
   - component: {fileID: 8288447241551011487}
-  - component: {fileID: 8442423564479606523}
   - component: {fileID: 4945449427401783328}
   - component: {fileID: 8069752331202378127}
   m_Layer: 0
@@ -2390,25 +2389,7 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 1
---- !u!114 &8442423564479606523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671092845158406629}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14bae4f3ff8234040b9cb62290ac5e60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AmmoPosition:
-  - {fileID: 6319863265463028819}
-  AmmoPrefab:
-  - {fileID: 1172261492053980, guid: 653118c2191c241438e8f0494b2438c8, type: 3}
-  TimeControlledShoot: 1
-  ShootIntervalTime: 0
-  strenght: 30
+  checkpointManager: {fileID: 0}
 --- !u!114 &4945449427401783328
 MonoBehaviour:
   m_ObjectHideFlags: 0
