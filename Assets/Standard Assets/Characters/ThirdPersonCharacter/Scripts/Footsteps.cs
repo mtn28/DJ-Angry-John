@@ -7,6 +7,7 @@ public class Footsteps : MonoBehaviour
     public GameObject footstep;
     public AudioSource footstepSound;
     public AudioClip footstepClip;
+    public Jump jumpScript; // Referência ao script de salto
 
     // Variáveis para rastrear quais teclas estão pressionadas
     private bool isMovingUp = false;
@@ -24,58 +25,64 @@ public class Footsteps : MonoBehaviour
     void Update()
     {
         // Movimento para cima
-        if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             isMovingUp = true;
             footsteps();
         }
-        else if(Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W))
+        else if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W))
         {
             isMovingUp = false;
             CheckAllKeysReleased();
         }
 
         // Movimento para baixo
-        if(Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
             isMovingDown = true;
             footsteps();
         }
-        else if(Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
+        else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
         {
             isMovingDown = false;
             CheckAllKeysReleased();
         }
 
         // Movimento para a esquerda
-        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             isMovingLeft = true;
             footsteps();
         }
-        else if(Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+        else if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
         {
             isMovingLeft = false;
             CheckAllKeysReleased();
         }
 
         // Movimento para a direita
-        if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             isMovingRight = true;
             footsteps();
         }
-        else if(Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D))
+        else if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D))
         {
             isMovingRight = false;
             CheckAllKeysReleased();
+        }
+
+        // Parar os passos se estiver pulando
+        if (jumpScript.isJumping)
+        {
+            StopFootsteps();
         }
     }
 
     void footsteps()
     {
-        // Verifica se pelo menos uma tecla de movimento está sendo pressionada
-        if (isMovingUp || isMovingDown || isMovingLeft || isMovingRight)
+        // Verifica se pelo menos uma tecla de movimento está sendo pressionada e o jogador não está pulando
+        if ((isMovingUp || isMovingDown || isMovingLeft || isMovingRight) && !jumpScript.isJumping)
         {
             footstep.SetActive(true);
             if (!footstepSound.isPlaying)
@@ -88,10 +95,18 @@ public class Footsteps : MonoBehaviour
 
     void CheckAllKeysReleased()
     {
-        // Verifica se todas as teclas de movimento foram soltas
-        if (!isMovingUp && !isMovingDown && !isMovingLeft && !isMovingRight)
+        // Verifica se todas as teclas de movimento foram soltas ou o jogador está pulando
+        if ((!isMovingUp && !isMovingDown && !isMovingLeft && !isMovingRight) || jumpScript.isJumping)
         {
-            footstep.SetActive(false);
+            StopFootsteps();
+        }
+    }
+
+    void StopFootsteps()
+    {
+        footstep.SetActive(false);
+        if (footstepSound.isPlaying)
+        {
             footstepSound.Stop();
         }
     }

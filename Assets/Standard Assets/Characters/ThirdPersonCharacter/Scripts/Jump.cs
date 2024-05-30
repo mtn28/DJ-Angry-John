@@ -8,7 +8,8 @@ public class Jump : MonoBehaviour
     public AudioSource jumpSound; // Referência ao componente AudioSource
     public AudioClip jumpClip; // Referência ao AudioClip do som de salto
 
-    private bool isJumping = false; // Variável para rastrear se o jogador está pulando
+    [HideInInspector]
+    public bool isJumping = false; // Variável para rastrear se o jogador está pulando
 
     // Start is called before the first frame update
     void Start()
@@ -36,11 +37,6 @@ public class Jump : MonoBehaviour
         {
             StartJump(); // Inicia o pulo
         }
-
-        if (Input.GetKeyUp(KeyCode.Space)) // Verifica se a tecla de espaço foi solta
-        {
-            StopJump(); // Termina o pulo
-        }
     }
 
     void StartJump()
@@ -53,16 +49,14 @@ public class Jump : MonoBehaviour
             {
                 jumpSound.Play(); // Reproduz o som de salto
             }
+            StartCoroutine(StopJumpAfterDelay()); // Inicia a rotina para desativar o salto após um atraso
         }
     }
 
-    void StopJump()
+    IEnumerator StopJumpAfterDelay()
     {
-        isJumping = false; // Marca que o jogador não está pulando
+        yield return new WaitForSeconds(1f); // Espera por 1 segundo
+        isJumping = false; // Marca que o jogador não está mais pulando
         jump.SetActive(false); // Desativa o GameObject do salto
-        if (jumpSound.isPlaying) // Verifica se o som de salto está sendo reproduzido
-        {
-            jumpSound.Stop(); // Para o som de salto
-        }
     }
 }
