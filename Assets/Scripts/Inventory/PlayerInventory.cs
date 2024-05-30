@@ -214,7 +214,18 @@ public class PlayerInventory : MonoBehaviour
 
 
 
+    public void UseHealthPotion()
+    {
+        // Remove a poção de saúde do inventário
+        inventoryList.Remove(itemType.Health);
+        
+        if (selectedItem != 0)
+        {
+            selectedItem -= 1;
+        }
 
+        NewItemSelected();
+    }
 
 
 }
