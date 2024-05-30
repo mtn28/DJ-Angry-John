@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -45,7 +46,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			healthManager = FindObjectOfType<HealthManager>();
 			myAnimation = GetComponent<Animator>();
-
 			checkpointManager = FindObjectOfType<CheckpointManager>();
 		}
 
@@ -218,6 +218,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				myAnimation.SetTrigger("Hit0");
 				healthManager.LoseHealth(40);
 				//hurtSound.Play();
+			}
+			else if (collision.gameObject.tag == "DemoEnd")
+			{
+				SceneManager.LoadScene("DemoScene");
 			}
 		}
 

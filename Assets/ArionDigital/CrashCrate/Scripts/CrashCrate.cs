@@ -99,6 +99,12 @@ namespace ArionDigital
                 // Instancia a banana no local calculado
                 GameObject banana = Instantiate(bananaPrefab, spawnPosition, Quaternion.identity);
 
+                // Anexa o script Banana.cs à banana
+                if (banana.GetComponent<Banana>() == null)
+                {
+                    banana.AddComponent<Banana>();
+                }
+
                 // Opcional: Desativa o Rigidbody da banana para fazê-la pairar
                 Rigidbody rb = banana.GetComponent<Rigidbody>();
                 if (rb != null)

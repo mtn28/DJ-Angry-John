@@ -21,11 +21,19 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Quando o jogador entra em um objeto com a tag "RespawnPoint", ele alcançou um checkpoint
             Debug.Log("Jogador alcançou um checkpoint! Respawn point: " + transform.position);
             if (checkpointManager != null)
             {
-                checkpointManager.SetCheckpointReached(transform.GetSiblingIndex());
+                // Ajuste para definir o índice do checkpoint usando o array de checkpoints no CheckpointManager
+                int checkpointIndex = System.Array.IndexOf(checkpointManager.checkpoints, transform);
+                if (checkpointIndex >= 0)
+                {
+                    checkpointManager.SetCheckpointReached(checkpointIndex);
+                }
+                else
+                {
+                    Debug.LogError("Checkpoint não encontrado no array de checkpoints do CheckpointManager!");
+                }
             }
             else
             {
