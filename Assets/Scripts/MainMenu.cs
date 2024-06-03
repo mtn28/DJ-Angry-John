@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     // Nome do nível a ser carregado ao iniciar um novo jogo
-    public string nivelACarregar;
+    [SerializeField]
+    private string cutsceneSceneName;
 
     // Referências para as telas
     [SerializeField] private GameObject mainMenuScreen;
@@ -28,8 +29,8 @@ public class MainMenu : MonoBehaviour
         // Define a pontuação do jogador como 0 ao iniciar um novo jogo
         PlayerPrefs.SetInt("score", 0);
 
-        // Carrega o nível especifico
-        SceneManager.LoadScene(nivelACarregar);
+        // Carrega a cena da cutscene
+        SceneManager.LoadScene(cutsceneSceneName);
 
         // Despausa o tempo do jogo ao iniciar um novo jogo
         Time.timeScale = 1;
@@ -66,5 +67,10 @@ public class MainMenu : MonoBehaviour
     {
         // Fecha o aplicativo
         Application.Quit();
+    }
+
+        public void Creditos()
+    {
+        SceneManager.LoadScene("Creditos");
     }
 }

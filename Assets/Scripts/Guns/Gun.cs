@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems; // Importar o namespace necessário
 
 public class Gun : MonoBehaviour
 {
@@ -45,24 +46,28 @@ public class Gun : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (bulletsFired < maxBullets)
+                // Verificar se o clique não foi em um elemento de UI
+                if (!IsPointerOverUI())
                 {
-                    FireBullet();
-                    bulletsFired++;
-                    UpdateAmmoText(); // Atualiza o texto após cada disparo
-
-                    if (bulletsFired >= maxBullets)
+                    if (bulletsFired < maxBullets)
                     {
-                        StartCoroutine(Reload());
+                        FireBullet();
+                        bulletsFired++;
+                        UpdateAmmoText(); // Atualiza o texto após cada disparo
+
+                        if (bulletsFired >= maxBullets)
+                        {
+                            StartCoroutine(Reload());
+                        }
+                        else
+                        {
+                            nextFireTime = Time.time + fireRate;
+                        }
                     }
                     else
                     {
-                        nextFireTime = Time.time + fireRate;
+                        PlayEmptyGunSound();
                     }
-                }
-                else
-                {
-                    PlayEmptyGunSound();
                 }
             }
         }
@@ -123,5 +128,11 @@ public class Gun : MonoBehaviour
     private void PlayEmptyGunSound()
     {
         audioSource.PlayOneShot(emptyGunSound); // Toca o som de arma vazia
+    }
+
+    // Método para verificar se o ponteiro está sobre um elemento de UI
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }

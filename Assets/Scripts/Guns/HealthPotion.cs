@@ -20,31 +20,30 @@ public class HealthPotion : MonoBehaviour
         // Detecta se o jogador clicou no botão esquerdo do mouse
         if (Input.GetMouseButtonDown(0))
         {
-                    UsePotion();
+            UsePotion();
         }
     }
 
     void UsePotion()
     {
-        // Aumenta a saúde do jogador
-        healthManager.health += healthIncrease;
-
         // Limita a saúde do jogador ao máximo de 100
-        if (healthManager.health > 100)
+        if (healthManager.health >= 100)
         {
             healthManager.health = 100;
         }
+        else
+        {
+            // Aumenta a saúde do jogador
+            healthManager.health += healthIncrease;
+            // Atualiza a barra de vida no HUD
+            healthManager.fillBar.fillAmount = healthManager.health / 100;
 
-        // Atualiza a barra de vida no HUD
-        healthManager.fillBar.fillAmount = healthManager.health / 100;
+            // Toca o som da poção sendo usada
+            audioSource.PlayOneShot(drinkSound);
 
-        // Toca o som da poção sendo usada
-        audioSource.PlayOneShot(drinkSound);
+            // Notifica o PlayerInventory para remover a poção do inventário
+            playerInventory.UseHealthPotion();
 
-        // Notifica o PlayerInventory para remover a poção do inventário
-        playerInventory.UseHealthPotion();
-
-        // Destrói o objeto da poção
-        Destroy(gameObject, drinkSound.length); // Espera o som terminar antes de destruir
+        }
     }
 }

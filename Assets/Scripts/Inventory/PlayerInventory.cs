@@ -34,7 +34,6 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] Camera cam;
 
 
-    [SerializeField] GameObject pickUpItem_gameobjet;
 
 
     [Space(20)]
@@ -89,7 +88,6 @@ public class PlayerInventory : MonoBehaviour
 
 
                 nearbyItem = null; // Clear the reference after picking up the item
-                pickUpItem_gameobjet.SetActive(false); // Deactivate the pickup UI
             }
         }
 
@@ -195,7 +193,6 @@ public class PlayerInventory : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         IPickable item = other.GetComponent<IPickable>();
-        pickUpItem_gameobjet.SetActive(true);
         if (item != null)
         {
             nearbyItem = item;
@@ -205,7 +202,6 @@ public class PlayerInventory : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         IPickable item = other.GetComponent<IPickable>();
-        pickUpItem_gameobjet.SetActive(false);
         if (item == nearbyItem)
         {
             nearbyItem = null;

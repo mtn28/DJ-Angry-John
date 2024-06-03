@@ -117,4 +117,14 @@ public class UIManager : MonoBehaviour
         optionsScreen.SetActive(true);
         pauseScreen.SetActive(false);
     }
+
+    public bool IsPauseMenuActive()
+    {
+        return pauseScreen.activeInHierarchy;
+    }
+
+    public bool IsOptionsMenuActive()
+    {
+        return isOptions;
+    }
 }
