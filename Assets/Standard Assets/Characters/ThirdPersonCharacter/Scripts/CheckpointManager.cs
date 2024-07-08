@@ -29,4 +29,17 @@ public class CheckpointManager : MonoBehaviour
             return checkpoints[0].position; // Supondo que o primeiro checkpoint seja a posição inicial
         }
     }
+
+    public Quaternion GetRespawnRotation()
+    {
+        if (currentCheckpointIndex != -1 && currentCheckpointIndex < checkpoints.Length)
+        {
+            return checkpoints[currentCheckpointIndex].rotation;
+        }
+        else
+        {
+            // Se nenhum checkpoint foi alcançado, retorne a rotação inicial do jogador ou outra rotação padrão
+            return checkpoints[0].rotation; // Supondo que a rotação do primeiro checkpoint seja a rotação inicial
+        }
+    }
 }

@@ -1,31 +1,41 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
     private Animator animator;
     private Vector3 lastPosition;
-    public AudioClip moveSound;
     private AudioSource moveAudioSource;
-    public float moveSoundVolume = 1.0f; // Adicione esta linha para controlar o volume
-    private bool isMoving = false; // Adicione esta linha
+    public float moveSoundVolume = 1.0f; // Volume base do som de movimento
+    private bool isMoving = false;
+    public Transform player; // Referência ao jogador
+    public float maxDistance = 10.0f; // Distância máxima para o som ser audível
+
+    public AudioSource externalAudioSource; // Referência ao AudioSource externo
 
     IEnumerator Start()
     {
         animator = GetComponent<Animator>();
         lastPosition = transform.position;
-        moveAudioSource = gameObject.AddComponent<AudioSource>();
+
+        // Use o AudioSource externo se disponível, caso contrário, adicione um novo AudioSource
+        if (externalAudioSource != null)
+        {
+            moveAudioSource = externalAudioSource;
+        }
+        else
+        {
+            moveAudioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         if (moveAudioSource != null)
         {
-            moveAudioSource.clip = moveSound;
             moveAudioSource.loop = true; // Certifique-se de que o som está em loop
-            moveAudioSource.volume = moveSoundVolume; // Defina o volume do som de movimento
+            moveAudioSource.volume = 0f; // Inicie com o volume zero
             moveAudioSource.playOnAwake = false; // Desative Play On Awake
         }
 
-        yield return new WaitForSeconds(6f); // Aguarde 1 segundo antes de iniciar a verificação da velocidade
+        yield return new WaitForSeconds(6f); // Aguarde 6 segundos antes de iniciar a verificação da velocidade
 
         StartCoroutine(CheckSpeed());
     }
@@ -48,6 +58,13 @@ public class EnemyMovement : MonoBehaviour
             {
                 isMoving = false;
                 moveAudioSource.Stop();
+            }
+
+            if (isMoving) // Ajuste o volume do som conforme a proximidade ao jogador
+            {
+                float distance = Vector3.Distance(transform.position, player.position);
+                float volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1) * moveSoundVolume;
+                moveAudioSource.volume = volume;
             }
 
             lastPosition = currentPosition;

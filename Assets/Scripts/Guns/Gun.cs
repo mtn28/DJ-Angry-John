@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; // Importar o namespace necessário
+using UnityEngine.EventSystems;
 
 public class Gun : MonoBehaviour
 {
@@ -75,26 +75,13 @@ public class Gun : MonoBehaviour
 
     private void FireBullet()
     {
-        GameObject Muzzle = Instantiate(muzzleFlash, muzzleFlashPosition);
+        GameObject Muzzle = Instantiate(muzzleFlash, muzzleFlashPosition.position, muzzleFlashPosition.rotation);
         Destroy(Muzzle, 0.2f);
 
-        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Vector3 targetPoint;
+        Vector3 forwardDirection = playerCamera.transform.forward;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            targetPoint = hit.point;
-        }
-        else
-        {
-            targetPoint = ray.GetPoint(1000);
-        }
-
-        Vector3 direction = (targetPoint - bulletSpawnPoint.position).normalized;
-
-        var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(direction));
-        bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+        var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(forwardDirection));
+        bullet.GetComponent<Rigidbody>().velocity = forwardDirection * bulletSpeed;
 
         audioSource.PlayOneShot(shootSound); // Toca o som de disparo
     }

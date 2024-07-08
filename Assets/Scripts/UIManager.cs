@@ -1,6 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.Characters.ThirdPerson;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,14 +17,26 @@ public class UIManager : MonoBehaviour
     private GameObject HUDScreen;
     [SerializeField]
     private AudioSource backgroundMusicSource;
+    // Referência ao CheckpointManager
+    [SerializeField]
+    private CheckpointManager checkpointManager;
+
+    // Referência ao ThirdPersonCharacter
+    private ThirdPersonCharacter playerCharacter;
+
     // Para indicar se o jogo terminou
     private bool isOptions = false;
+
+    // Lista de AudioSources que estavam tocando quando o jogo foi pausado
+    private List<AudioSource> audioSourcesPlaying = new List<AudioSource>();
 
     private void Awake()
     {
         optionsScreen.SetActive(false);
         pauseScreen.SetActive(false);
         HUDScreen.SetActive(true);
+
+        playerCharacter = FindObjectOfType<ThirdPersonCharacter>();
     }
 
     private void Update()
@@ -45,22 +59,10 @@ public class UIManager : MonoBehaviour
         // Esconde o HUD se o jogo estiver pausado ou no menu de opções
         if (pauseScreen.activeInHierarchy || isOptions)
         {
-            // Pausa a música de fundo
-            if (backgroundMusicSource != null && backgroundMusicSource.isPlaying)
-            {
-                backgroundMusicSource.Pause();
-            }
-            // Esconde o HUD
             HUDScreen.SetActive(false);
         }
         else
         {
-            // Despausa a música de fundo
-            if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
-            {
-                backgroundMusicSource.UnPause();
-            }
-            // Mostra o HUD
             HUDScreen.SetActive(true);
         }
     }
@@ -72,7 +74,7 @@ public class UIManager : MonoBehaviour
         optionsScreen.SetActive(true);
         HUDScreen.SetActive(false); // Esconde o HUD
         pauseScreen.SetActive(false);
-        Time.timeScale = 0; // Pausa o tempo do jogo
+        playerCharacter.UnlockCursor(); // Garante que o cursor esteja desbloqueado
     }
 
     // Retorna para o menu principal
@@ -97,9 +99,46 @@ public class UIManager : MonoBehaviour
         isOptions = false;
         optionsScreen.SetActive(false);
 
-        // Quando a pausa está ativada, o timescale é definido como 0 e o tempo está parado
-        // Quando está desativada, o timescale é definido como 1 e o tempo continua normalmente
-        Time.timeScale = status ? 0 : 1;
+        if (status)
+        {
+            playerCharacter.UnlockCursor();
+            ThirdPersonCharacter.IsPaused = true;
+            Time.timeScale = 0; // Pausa o jogo
+            PauseAllAudio();
+        }
+        else
+        {
+            playerCharacter.LockCursor();
+            ThirdPersonCharacter.IsPaused = false;
+            Time.timeScale = 1; // Retoma o jogo
+            ResumeAllAudio();
+        }
+    }
+
+    // Método para pausar todos os sons
+    private void PauseAllAudio()
+    {
+        audioSourcesPlaying.Clear();
+        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+
+        foreach (AudioSource audioSource in allAudioSources)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSourcesPlaying.Add(audioSource);
+                audioSource.Pause();
+            }
+        }
+    }
+
+    // Método para retomar todos os sons
+    private void ResumeAllAudio()
+    {
+        foreach (AudioSource audioSource in audioSourcesPlaying)
+        {
+            audioSource.UnPause();
+        }
+        audioSourcesPlaying.Clear();
     }
 
     // Método para voltar ao menu de pausa a partir do menu de opções
@@ -108,6 +147,7 @@ public class UIManager : MonoBehaviour
         isOptions = false;
         optionsScreen.SetActive(false);
         pauseScreen.SetActive(true);
+        playerCharacter.UnlockCursor(); // Garante que o cursor esteja desbloqueado
     }
 
     // Método para ir ao menu de opções a partir do menu de pausa
@@ -116,6 +156,33 @@ public class UIManager : MonoBehaviour
         isOptions = true;
         optionsScreen.SetActive(true);
         pauseScreen.SetActive(false);
+        playerCharacter.UnlockCursor(); // Garante que o cursor esteja desbloqueado
+    }
+
+    // Método para mover o jogador para um checkpoint específico
+    public void MoveToCheckpoint()
+    {
+        if (checkpointManager != null)
+        {
+            Vector3 respawnPosition = checkpointManager.GetRespawnPosition();
+            Quaternion respawnRotation = checkpointManager.GetRespawnRotation();
+            playerCharacter.MoveToPosition(respawnPosition, respawnRotation);
+            PauseGame(false);
+        }
+        else
+        {
+            Debug.LogWarning("CheckpointManager não foi atribuído no inspetor.");
+        }
+    }
+
+    // Método para mover o jogador para a posição do boss
+    public void MoveToBossCheckpoint()
+    {
+        Vector3 bossCheckpointPosition = new Vector3(-98f, -28.9673f, 94);
+        Debug.LogError(bossCheckpointPosition);
+        Quaternion bossCheckpointRotation = Quaternion.identity; // Defina a rotação desejada se necessário
+        playerCharacter.MoveToPosition(bossCheckpointPosition, bossCheckpointRotation);
+        PauseGame(false);
     }
 
     public bool IsPauseMenuActive()

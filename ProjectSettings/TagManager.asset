@@ -11,6 +11,8 @@ TagManager:
   - EnemyRocket
   - RespawnPoint
   - DemoEnd
+  - BulletExplosive
+  - LimitGround
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - UI
   - Player
   - Projectile
-  - 
+  - ObjectExplode
   - 
   - 
   - 

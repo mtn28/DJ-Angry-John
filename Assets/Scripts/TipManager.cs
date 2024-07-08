@@ -45,7 +45,7 @@ public class TipManager : MonoBehaviour
             {
                 isDisplayingTip = true;
                 GameObject currentTip = tipsQueue.Dequeue();
-                currentTip.SetActive(true);
+                    currentTip.SetActive(true);
                 yield return new WaitForSeconds(duration);
                 currentTip.SetActive(false);
             }

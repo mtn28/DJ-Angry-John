@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace ArionDigital
 {
@@ -24,6 +25,10 @@ namespace ArionDigital
 
         private void Start()
         {
+            crashAudioClip.spatialBlend = 5.0f; 
+            crashAudioClip.minDistance = 5.0f; 
+            crashAudioClip.maxDistance = 15.0f;
+
             // Encontra todas as bananas dentro da caixa e desativa os Rigidbody
             bananaRigidbodies = GetComponentsInChildren<Rigidbody>();
             foreach (var rb in bananaRigidbodies)
@@ -61,8 +66,11 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Destroi o GameObject após 3 segundos
-            Destroy(gameObject, 3f);
+            // Ajusta os materiais da caixa fraturada para transparente
+            SetMaterialsToTransparent(fracturedCrate);
+
+            // Inicia a corutina para desvanecer a caixa fraturada
+            StartCoroutine(FadeOutAndDestroy(fracturedCrate, 3f)); // Duração do fade-out de 3 segundos
         }
 
         [ContextMenu("Test")]
@@ -84,8 +92,11 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Destroi o GameObject após 3 segundos
-            Destroy(gameObject, 3f);
+            // Ajusta os materiais da caixa fraturada para transparente
+            SetMaterialsToTransparent(fracturedCrate);
+
+            // Inicia a corutina para desvanecer a caixa fraturada
+            StartCoroutine(FadeOutAndDestroy(fracturedCrate, 3f)); // Duração do fade-out de 3 segundos
         }
 
         private void DropBananas()
@@ -112,6 +123,61 @@ namespace ArionDigital
                     rb.isKinematic = true;
                 }
             }
+        }
+
+        private void SetMaterialsToTransparent(GameObject obj)
+        {
+            MeshRenderer[] meshRenderers = obj.GetComponentsInChildren<MeshRenderer>();
+            foreach (var renderer in meshRenderers)
+            {
+                foreach (var material in renderer.materials)
+                {
+                    material.SetFloat("_Mode", 2);
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.SetInt("_ZWrite", 0);
+                    material.DisableKeyword("_ALPHATEST_ON");
+                    material.EnableKeyword("_ALPHABLEND_ON");
+                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.renderQueue = 3000;
+                }
+            }
+        }
+
+        private IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
+        {
+            MeshRenderer[] meshRenderers = obj.GetComponentsInChildren<MeshRenderer>();
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+
+                foreach (var renderer in meshRenderers)
+                {
+                    foreach (var material in renderer.materials)
+                    {
+                        Color color = material.color;
+                        color.a = alpha;
+                        material.color = color;
+                    }
+                }
+
+                yield return null;
+            }
+
+            foreach (var renderer in meshRenderers)
+            {
+                foreach (var material in renderer.materials)
+                {
+                    Color color = material.color;
+                    color.a = 0;
+                    material.color = color;
+                }
+            }
+
+            Destroy(obj);
         }
     }
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3015322537847439513}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wrist_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2661907014929573186}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,8 +79,10 @@ GameObject:
   - component: {fileID: 6853704304325720420}
   - component: {fileID: 6524052727655563793}
   - component: {fileID: 3152231423247575417}
+  - component: {fileID: -4747560689374738226}
   - component: {fileID: -1709914138400652544}
-  m_Layer: 0
+  - component: {fileID: 6206182943858050888}
+  m_Layer: 8
   m_Name: SmallEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -173,12 +175,13 @@ MonoBehaviour:
   walkPointRange: 0
   timeBetweenAttacks: 2
   projectile: {fileID: 4984500230177365158, guid: 2c7c7fd933570844280559c76c9ac393, type: 3}
-  bulletSound: {fileID: 8300000, guid: 0839c3662054b0c45833688a833c23b4, type: 3}
-  bulletSoundVolume: 1
+  bulletAudioSource: {fileID: -4747560689374738226}
+  bulletSoundVolume: 0.24
   sightRange: 20
   attackRange: 12
   playerInSightRange: 0
   playerInAttackRange: 0
+  explosionEffect: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1, type: 3}
 --- !u!114 &6524052727655563793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,8 +194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca327acbac5293488f39a1ed416aed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSound: {fileID: 0}
-  moveSoundVolume: 1
+  moveSoundVolume: 0.11
+  player: {fileID: 0}
+  maxDistance: 20
+  externalAudioSource: {fileID: -1709914138400652544}
 --- !u!136 &3152231423247575417
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -216,7 +221,7 @@ CapsuleCollider:
   m_Height: 0.95594406
   m_Direction: 1
   m_Center: {x: -0.003519694, y: 0.44515166, z: 0}
---- !u!82 &-1709914138400652544
+--- !u!82 &-4747560689374738226
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -226,7 +231,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 883865609840572869, guid: 045a8590e12ade549a82ddf2fc798ce6, type: 2}
-  m_audioClip: {fileID: 8300000, guid: b9b7a23e710ee714fab822ffad660595, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0839c3662054b0c45833688a833c23b4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.4
   m_Pitch: 1
@@ -312,6 +317,129 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &-1709914138400652544
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364196406829626924}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 883865609840572869, guid: 045a8590e12ade549a82ddf2fc798ce6, type: 2}
+  m_audioClip: {fileID: 8300000, guid: b9b7a23e710ee714fab822ffad660595, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.019
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!54 &6206182943858050888
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364196406829626924}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &403845554500970989
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6276048760229135314}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shoulder_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5628003692081803301}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shoulder_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +513,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5148597563022658128}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hip_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6718567950107851769}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ankle_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,7 +576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5569875318782015091}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrasperThumb_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,7 +607,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3777958219143569644}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +639,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2896673852589046974}
   - component: {fileID: 2016846967961208218}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Diver_Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +742,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7816702717484825722}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wrist_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -647,7 +775,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 959718754052893099}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +807,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5001888083789177354}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrasperFinger_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -710,7 +838,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1897611753818868348}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -741,7 +869,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6522322720855565939}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrasperFinger_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -772,7 +900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4283602146723208832}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ankle_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -806,7 +934,7 @@ GameObject:
   - component: {fileID: 7228615193921129875}
   - component: {fileID: 3642246849359010070}
   - component: {fileID: 2734085020996026223}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: CanvasMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -907,7 +1035,7 @@ GameObject:
   - component: {fileID: 1647800993016818614}
   - component: {fileID: 5370632516013100123}
   - component: {fileID: 8067093857790592332}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: MiniMapMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -980,7 +1108,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5761615367805981710}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hip_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1012,7 +1140,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1356866348539129004}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1049,7 +1177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4940132517736765936}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrasperThumb_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}

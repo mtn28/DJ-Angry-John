@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5475593284530466773}
   - component: {fileID: 6692999060844158571}
   - component: {fileID: 7873494037804913190}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: MiniMapMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 7302127763111639654}
   - component: {fileID: 285311776778893551}
   - component: {fileID: 8561844331707664120}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: CanvasMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,9 +191,9 @@ GameObject:
   - component: {fileID: 2344233952891658336}
   - component: {fileID: 8972346622805641525}
   - component: {fileID: 4262418605540733613}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Crash_Crate_2
-  m_TagString: Untagged
+  m_TagString: BulletExplosive
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -314,10 +314,10 @@ AudioSource:
   m_GameObject: {fileID: 9065924571364506927}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 883865609840572869, guid: 045a8590e12ade549a82ddf2fc798ce6, type: 2}
   m_audioClip: {fileID: 8300000, guid: d803f56632f3ac44eae0feee78d194fd, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -409,13 +409,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2245364561442738552}
     m_Modifications:
+    - target: {fileID: 6998636745878797472, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6998636745878797474, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
       propertyPath: m_Name
       value: Crash_Crate_Fractured_LOD_2
       objectReference: {fileID: 0}
     - target: {fileID: 6998636745878797474, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797474, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797476, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797478, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797480, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797482, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797484, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797486, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797488, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797490, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797492, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797494, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998636745878797498, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6998636745879085186, guid: 3db83d7ed3cb69943a799e791a54914b, type: 3}
       propertyPath: m_RootOrder
