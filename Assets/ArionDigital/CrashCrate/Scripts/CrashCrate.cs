@@ -20,6 +20,9 @@ namespace ArionDigital
         public int bananaCount = 5; // Quantidade de bananas a serem dropadas
         public float spawnRadius = 1.0f; // Raio ao redor da caixa para spawnar as bananas
 
+        [Header("Fade Settings")]
+        public Material transparentMaterial; // Material transparente
+
         // Lista para armazenar os Rigidbody das bananas
         private Rigidbody[] bananaRigidbodies;
 
@@ -66,7 +69,7 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Ajusta os materiais da caixa fraturada para transparente
+            // Ajusta os materiais da caixa fraturada para o material transparente
             SetMaterialsToTransparent(fracturedCrate);
 
             // Inicia a corutina para desvanecer a caixa fraturada
@@ -92,7 +95,7 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Ajusta os materiais da caixa fraturada para transparente
+            // Ajusta os materiais da caixa fraturada para o material transparente
             SetMaterialsToTransparent(fracturedCrate);
 
             // Inicia a corutina para desvanecer a caixa fraturada
@@ -130,17 +133,7 @@ namespace ArionDigital
             MeshRenderer[] meshRenderers = obj.GetComponentsInChildren<MeshRenderer>();
             foreach (var renderer in meshRenderers)
             {
-                foreach (var material in renderer.materials)
-                {
-                    material.SetFloat("_Mode", 2);
-                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    material.SetInt("_ZWrite", 0);
-                    material.DisableKeyword("_ALPHATEST_ON");
-                    material.EnableKeyword("_ALPHABLEND_ON");
-                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    material.renderQueue = 3000;
-                }
+                renderer.material = transparentMaterial;
             }
         }
 
@@ -156,12 +149,9 @@ namespace ArionDigital
 
                 foreach (var renderer in meshRenderers)
                 {
-                    foreach (var material in renderer.materials)
-                    {
-                        Color color = material.color;
-                        color.a = alpha;
-                        material.color = color;
-                    }
+                    Color color = renderer.material.color;
+                    color.a = alpha;
+                    renderer.material.color = color;
                 }
 
                 yield return null;
@@ -169,12 +159,9 @@ namespace ArionDigital
 
             foreach (var renderer in meshRenderers)
             {
-                foreach (var material in renderer.materials)
-                {
-                    Color color = material.color;
-                    color.a = 0;
-                    material.color = color;
-                }
+                Color color = renderer.material.color;
+                color.a = 0;
+                renderer.material.color = color;
             }
 
             Destroy(obj);

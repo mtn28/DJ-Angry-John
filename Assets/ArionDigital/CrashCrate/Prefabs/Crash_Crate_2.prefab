@@ -234,6 +234,7 @@ MonoBehaviour:
   bananaPrefab: {fileID: 1096055717364193163, guid: 9e6d3febdab44674291f70054a5f5780, type: 3}
   bananaCount: 5
   spawnRadius: 2
+  transparentMaterial: {fileID: 2100000, guid: 045f7b76d5640254d92829db7f1ce010, type: 2}
 --- !u!65 &1417637340330785042
 BoxCollider:
   m_ObjectHideFlags: 0
