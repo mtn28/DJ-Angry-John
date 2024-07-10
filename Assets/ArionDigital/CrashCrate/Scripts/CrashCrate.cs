@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace ArionDigital
 {
@@ -19,11 +20,18 @@ namespace ArionDigital
         public int bananaCount = 5; // Quantidade de bananas a serem dropadas
         public float spawnRadius = 1.0f; // Raio ao redor da caixa para spawnar as bananas
 
+        [Header("Fade Settings")]
+        public Material transparentMaterial; // Material transparente
+
         // Lista para armazenar os Rigidbody das bananas
         private Rigidbody[] bananaRigidbodies;
 
         private void Start()
         {
+            crashAudioClip.spatialBlend = 5.0f; 
+            crashAudioClip.minDistance = 5.0f; 
+            crashAudioClip.maxDistance = 15.0f;
+
             // Encontra todas as bananas dentro da caixa e desativa os Rigidbody
             bananaRigidbodies = GetComponentsInChildren<Rigidbody>();
             foreach (var rb in bananaRigidbodies)
@@ -61,8 +69,11 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Destroi o GameObject após 3 segundos
-            Destroy(gameObject, 3f);
+            // Ajusta os materiais da caixa fraturada para o material transparente
+            SetMaterialsToTransparent(fracturedCrate);
+
+            // Inicia a corutina para desvanecer a caixa fraturada
+            StartCoroutine(FadeOutAndDestroy(fracturedCrate, 3f)); // Duração do fade-out de 3 segundos
         }
 
         [ContextMenu("Test")]
@@ -84,8 +95,11 @@ namespace ArionDigital
             // Instancia as bananas
             DropBananas();
 
-            // Destroi o GameObject após 3 segundos
-            Destroy(gameObject, 3f);
+            // Ajusta os materiais da caixa fraturada para o material transparente
+            SetMaterialsToTransparent(fracturedCrate);
+
+            // Inicia a corutina para desvanecer a caixa fraturada
+            StartCoroutine(FadeOutAndDestroy(fracturedCrate, 3f)); // Duração do fade-out de 3 segundos
         }
 
         private void DropBananas()
@@ -112,6 +126,45 @@ namespace ArionDigital
                     rb.isKinematic = true;
                 }
             }
+        }
+
+        private void SetMaterialsToTransparent(GameObject obj)
+        {
+            MeshRenderer[] meshRenderers = obj.GetComponentsInChildren<MeshRenderer>();
+            foreach (var renderer in meshRenderers)
+            {
+                renderer.material = transparentMaterial;
+            }
+        }
+
+        private IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
+        {
+            MeshRenderer[] meshRenderers = obj.GetComponentsInChildren<MeshRenderer>();
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+
+                foreach (var renderer in meshRenderers)
+                {
+                    Color color = renderer.material.color;
+                    color.a = alpha;
+                    renderer.material.color = color;
+                }
+
+                yield return null;
+            }
+
+            foreach (var renderer in meshRenderers)
+            {
+                Color color = renderer.material.color;
+                color.a = 0;
+                renderer.material.color = color;
+            }
+
+            Destroy(obj);
         }
     }
 }

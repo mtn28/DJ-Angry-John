@@ -1,15 +1,8 @@
-﻿
+﻿using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
-/// Thanks for downloading my projectile gun script! :D
-/// Feel free to use it in any project you like!
-/// 
-/// The code is fully commented but if you still have any questions
-/// don't hesitate to write a yt comment
-/// or use the #coding-problems channel of my discord server
-/// 
-/// Dave
 public class ProjectileGunTutorial : MonoBehaviour
 {
     //bullet 
@@ -27,18 +20,24 @@ public class ProjectileGunTutorial : MonoBehaviour
 
     //Recoil
     public Rigidbody playerRb;
-    public float recoilForce;
 
     //bools
-    bool shooting, readyToShoot, reloading;
+    public bool shooting, readyToShoot, reloading;
 
     //Reference
     public Camera fpsCam;
     public Transform attackPoint;
 
     //Graphics
-    public GameObject muzzleFlash;
+    public GameObject muzzleFlashPrefab; // Prefab do muzzle flash
+    public Transform muzzleFlashPosition;
     public TextMeshProUGUI ammunitionDisplay;
+
+    public AudioSource audioSource; // Componente de áudio
+    public AudioClip shootSound; // Som de disparo
+    public AudioClip emptyGunSound; // Som de arma vazia
+
+    public Slider reloadSlider; // Barra de recarga
 
     //bug fixing :D
     public bool allowInvoke = true;
@@ -48,6 +47,25 @@ public class ProjectileGunTutorial : MonoBehaviour
         //make sure magazine is full
         bulletsLeft = magazineSize;
         readyToShoot = true;
+        reloadSlider.gameObject.SetActive(false); // Desativa a barra de recarga inicialmente
+    }
+
+    private void OnEnable()
+    {
+        if (reloading)
+        {
+            reloadSlider.gameObject.SetActive(true);
+            StartCoroutine(ReloadCoroutine());
+        }
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        if (reloading)
+        {
+            reloadSlider.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -56,18 +74,20 @@ public class ProjectileGunTutorial : MonoBehaviour
 
         //Set ammo display, if it exists :D
         if (ammunitionDisplay != null)
-            ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + " / " + magazineSize / bulletsPerTap);
+            ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + "");
     }
+
     private void MyInput()
     {
         //Check if allowed to hold down button and take corresponding input
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        //Reloading 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
-        //Reload automatically when trying to shoot without ammo
-        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
+        // Reload automaticamente quando as balas chegarem a 0
+        if (bulletsLeft <= 0 && !reloading)
+        {
+            Reload();
+        }
 
         //Shooting
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
@@ -77,11 +97,21 @@ public class ProjectileGunTutorial : MonoBehaviour
 
             Shoot();
         }
+        // Tentar disparar durante a recarga
+        else if (shooting && reloading)
+        {
+            PlayEmptyGunSound();
+        }
     }
 
     private void Shoot()
     {
         readyToShoot = false;
+
+        // Cria o muzzle flash e garante que ele está na direção correta
+        GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, muzzleFlashPosition.position, muzzleFlashPosition.rotation);
+        muzzleFlash.transform.SetParent(muzzleFlashPosition); // Anexa o muzzle flash ao ponto de spawn
+        Destroy(muzzleFlash, 0.2f); // Destrói o muzzle flash após 0.2 segundos
 
         //Find the exact hit position using a raycast
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view
@@ -113,10 +143,6 @@ public class ProjectileGunTutorial : MonoBehaviour
         currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
         currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
 
-        //Instantiate muzzle flash, if you have one
-        if (muzzleFlash != null)
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
-
         bulletsLeft--;
         bulletsShot++;
 
@@ -126,14 +152,15 @@ public class ProjectileGunTutorial : MonoBehaviour
             Invoke("ResetShot", timeBetweenShooting);
             allowInvoke = false;
 
-            //Add recoil to player (should only be called once)
-            playerRb.AddForce(-directionWithSpread.normalized * recoilForce, ForceMode.Impulse);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function
         if (bulletsShot < bulletsPerTap && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
+
+        audioSource.PlayOneShot(shootSound); // Toca o som de disparo
     }
+
     private void ResetShot()
     {
         //Allow shooting and invoking again
@@ -144,12 +171,30 @@ public class ProjectileGunTutorial : MonoBehaviour
     private void Reload()
     {
         reloading = true;
-        Invoke("ReloadFinished", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
+        reloadSlider.gameObject.SetActive(true); // Ativa a barra de recarga
+
+        // StartCoroutine para a recarga
+        StartCoroutine(ReloadCoroutine());
     }
-    private void ReloadFinished()
+
+    public IEnumerator ReloadCoroutine()
     {
-        //Fill magazine
+        float elapsedTime = 0f;
+
+        while (elapsedTime < reloadTime)
+        {
+            elapsedTime += Time.deltaTime;
+            reloadSlider.value = elapsedTime / reloadTime; // Atualiza a barra de recarga
+            yield return null;
+        }
+
         bulletsLeft = magazineSize;
         reloading = false;
+        reloadSlider.gameObject.SetActive(false); // Desativa a barra de recarga
+    }
+
+    private void PlayEmptyGunSound()
+    {
+        audioSource.PlayOneShot(emptyGunSound); // Toca o som de arma vazia
     }
 }

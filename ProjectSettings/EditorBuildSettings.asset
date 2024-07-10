@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: 46b7f418618d19a40876caba82f865c9
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/CutScene.unity
     guid: 4975d8ee6340dcc4cba37a014c7cdd1f
   - enabled: 1
@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Creditos.unity
     guid: 19aaf653c7721e547a6651fcc9e5fd1e
+  - enabled: 1
+    path: Assets/Scenes/CutScene 1.unity
+    guid: 089c4d245354a8642a361d6adb042615
+  - enabled: 1
+    path: Assets/Scenes/Nivel1 endscene.unity
+    guid: 36a43102fb8b141478dafdabb3ed9ae8
   m_configObjects: {}

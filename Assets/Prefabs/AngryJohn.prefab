@@ -358,6 +358,9 @@ MonoBehaviour:
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 1
   healthManager: {fileID: 6941952158450473851}
+  checkpointManager: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  maxJumps: 2
 --- !u!114 &2981488374484597639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +449,7 @@ MonoBehaviour:
   footstep: {fileID: 2317330711653984235}
   footstepSound: {fileID: 2049268821901707576}
   footstepClip: {fileID: 8300000, guid: adcb268258d92412388079878d354f39, type: 3}
+  jumpScript: {fileID: 0}
 --- !u!114 &7007434045667679996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +465,7 @@ MonoBehaviour:
   jump: {fileID: 8211607389724795027}
   jumpSound: {fileID: 923590125165586722}
   jumpClip: {fileID: 8300000, guid: 5a5fdebcd48f54c66aa91bbbde3e5aed, type: 3}
+  isJumping: 0
 --- !u!1 &185595120047598301
 GameObject:
   m_ObjectHideFlags: 0
@@ -4531,11 +4536,15 @@ MonoBehaviour:
   bulletsPerTap: 1
   allowButtonHold: 1
   playerRb: {fileID: 7193307379740615254}
-  recoilForce: 0
   fpsCam: {fileID: 0}
   attackPoint: {fileID: 6769094415064253875}
-  muzzleFlash: {fileID: 0}
+  muzzleFlashPrefab: {fileID: 0}
+  muzzleFlashPosition: {fileID: 0}
   ammunitionDisplay: {fileID: 0}
+  audioSource: {fileID: 0}
+  shootSound: {fileID: 0}
+  emptyGunSound: {fileID: 0}
+  reloadSlider: {fileID: 0}
   allowInvoke: 1
 --- !u!114 &7991641131177405860
 MonoBehaviour:
@@ -4553,9 +4562,16 @@ MonoBehaviour:
   bulletPrefab: {fileID: 4984500230177365158, guid: a357d0ace49d04940aee240ac7a36e57, type: 3}
   bulletSpeed: 40
   fireRate: 0.7
+  maxBullets: 10
+  reloadTime: 5
   muzzleFlash: {fileID: 8179852306206218487, guid: 2fecd66119d0168498894e03329ddd15, type: 3}
   muzzleFlashPosition: {fileID: 8698079144410394167}
   playerCamera: {fileID: 0}
+  ammoText: {fileID: 0}
+  reloadSlider: {fileID: 0}
+  audioSource: {fileID: 0}
+  shootSound: {fileID: 0}
+  emptyGunSound: {fileID: 0}
 --- !u!1 &8555412856282580208
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,19 +19,29 @@ public class EnemyAttack : MonoBehaviour
     bool alreadyAttacked;
     public GameObject projectile;
     
-    public AudioClip bulletSound;
+    public AudioSource bulletAudioSource; // Referência ao AudioSource para o som do projétil
     public float bulletSoundVolume = 1.0f; // Volume da bala ajustável
-    private AudioSource audioSource;
 
     // States
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
+    public GameObject explosionEffect; // Referência ao prefab de explosão
+
+    private bool hasExploded = false; // Variável para garantir que a explosão ocorra uma vez
+
     private void Awake()
     {
         player = GameObject.Find("AngryJohn").transform;
         agent = GetComponent<NavMeshAgent>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+
+        // Adicione um novo AudioSource se não houver nenhum atribuído
+        if (bulletAudioSource == null)
+        {
+            bulletAudioSource = gameObject.AddComponent<AudioSource>();
+            bulletAudioSource.volume = bulletSoundVolume;
+            bulletAudioSource.playOnAwake = false;
+        }
     }
 
     private void Update()
@@ -108,10 +118,10 @@ public class EnemyAttack : MonoBehaviour
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
 
-            // Play the bullet sound
-            if (bulletSound != null && audioSource != null)
+            // Play the bullet sound using AudioSource
+            if (bulletAudioSource != null && bulletAudioSource.clip != null)
             {
-                audioSource.PlayOneShot(bulletSound, bulletSoundVolume);
+                bulletAudioSource.Play();
             }
         }
     }
@@ -135,22 +145,30 @@ public class EnemyAttack : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        if (health <= 0 && !hasExploded) // Verifica se o inimigo já foi destruído
+        {
+            hasExploded = true;
+            Invoke(nameof(DestroyEnemy), 0.5f);
+        }
     }
 
-        private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "JohnBullet")
         {
-            if (collision.gameObject.tag == "JohnBullet")
-            {
-                //myAnimation.SetTrigger("");
-                TakeDamage(50);
-                //hurtSound.Play();
-            }
+            //myAnimation.SetTrigger("");
+            TakeDamage(50);
+            //hurtSound.Play();
         }
-
+    }
 
     private void DestroyEnemy()
     {
+        if (explosionEffect != null)
+        {
+            GameObject explosionInstance = Instantiate(explosionEffect, transform.position, transform.rotation); // Instancia o efeito de explosão
+            Destroy(explosionInstance, 2f); // Destrói o efeito de explosão após 2 segundos
+        }
         Destroy(gameObject);
     }
 

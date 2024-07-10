@@ -26,11 +26,30 @@ public class BananaManager : MonoBehaviour
         UpdateBananaCount();
     }
 
+    public bool SpendBananas(int amount)
+    {
+        if (bananaCount >= amount)
+        {
+            bananaCount -= amount;
+            UpdateBananaCount();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void UpdateBananaCount()
     {
         if (bananaCounterText != null)
         {
-            bananaCounterText.text =  bananaCount.ToString();
+            bananaCounterText.text = bananaCount.ToString();
         }
+    }
+
+    public int GetBananaCount()
+    {
+        return bananaCount;
     }
 }

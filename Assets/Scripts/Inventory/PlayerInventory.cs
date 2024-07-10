@@ -23,7 +23,6 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] GameObject rigon_item;
     [SerializeField] GameObject health_item;
 
-
     [Space(20)]
     [Header("Item prefabs")]
     [SerializeField] GameObject zeus_prefab;
@@ -33,30 +32,21 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] Camera cam;
 
-
-
-
     [Space(20)]
     [Header("UI")]
     [SerializeField] Image[] inventorySlotImage = new Image[4];
     [SerializeField] Image[] inventoryBackgroundImage = new Image[4];
     [SerializeField] Sprite emptySlotSprite;
 
-
     private Dictionary<itemType, GameObject> itemSetActive = new Dictionary<itemType, GameObject>() { };
     private Dictionary<itemType, GameObject> itemInstantiate = new Dictionary<itemType, GameObject>() { };
 
-
     private IPickable nearbyItem;
-
-
 
     [SerializeField] Sprite lancacocos;
     [SerializeField] Sprite zeus;
     [SerializeField] Sprite health;
     [SerializeField] Sprite rigon;
-
-
 
     void Start()
     {
@@ -71,26 +61,20 @@ public class PlayerInventory : MonoBehaviour
         itemInstantiate.Add(itemType.Health, health_prefab);
 
         NewItemSelected();
-
     }
 
     void Update()
     {
         if (Input.GetKeyDown(pickItemKey) && nearbyItem != null)
         {
-
             ItemPickable itemPickable = nearbyItem as ItemPickable;
             if (itemPickable != null)
             {
-
                 inventoryList.Add(itemPickable.itemScriptableObject.item_type);
                 nearbyItem.PickItem();
-
-
                 nearbyItem = null; // Clear the reference after picking up the item
             }
         }
-
 
         //Items
         if (Input.GetKeyDown(throwItemKey) && inventoryList.Count > 1)
@@ -105,17 +89,11 @@ public class PlayerInventory : MonoBehaviour
             NewItemSelected();
         }
 
-
         //UI
         for (int i = 0; i < 4; i++)
         {
             if (i < inventoryList.Count)
             {
-
-                //inventorySlotImage[i].sprite = itemSetActive[inventoryList[i]].GetComponent<Item>().itemScriptableObject.item_sprite;
-
-
-                //Debug.Log("dasd" + itemSetActive[inventoryList[i]].ToString()+ " asdads");
                 if (itemSetActive[inventoryList[i]].ToString() == "LancaCocos (UnityEngine.GameObject)")
                 {
                     inventorySlotImage[i].sprite = lancacocos;
@@ -153,7 +131,6 @@ public class PlayerInventory : MonoBehaviour
             a++;
         }
 
-
         if (Input.GetKeyDown(KeyCode.Alpha1) && inventoryList.Count > 0)
         {
             selectedItem = 0;
@@ -174,9 +151,7 @@ public class PlayerInventory : MonoBehaviour
             selectedItem = 3;
             NewItemSelected();
         }
-
     }
-
 
     private void NewItemSelected()
     {
@@ -185,9 +160,18 @@ public class PlayerInventory : MonoBehaviour
         rigon_item.SetActive(false);
         health_item.SetActive(false);
 
-        GameObject selectedItemGameObject = itemSetActive[inventoryList[selectedItem]];
-        selectedItemGameObject.SetActive(true);
+        if (inventoryList.Count > 0)
+        {
+            GameObject selectedItemGameObject = itemSetActive[inventoryList[selectedItem]];
+            selectedItemGameObject.SetActive(true);
 
+            // Verifica se o item selecionado é uma arma e reinicia a recarga se necessário
+            ProjectileGunTutorial gunScript = selectedItemGameObject.GetComponent<ProjectileGunTutorial>();
+            if (gunScript != null && gunScript.reloading)
+            {
+                gunScript.StartCoroutine(gunScript.ReloadCoroutine());
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -202,19 +186,23 @@ public class PlayerInventory : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         IPickable item = other.GetComponent<IPickable>();
-        if (item == nearbyItem)
+        if (item != null && item == nearbyItem)
         {
             nearbyItem = null;
         }
     }
 
-
+    public void AddItemToInventory(itemType item)
+    {
+        inventoryList.Add(item);
+        NewItemSelected();
+    }
 
     public void UseHealthPotion()
     {
         // Remove a poção de saúde do inventário
         inventoryList.Remove(itemType.Health);
-        
+
         if (selectedItem != 0)
         {
             selectedItem -= 1;
@@ -222,12 +210,17 @@ public class PlayerInventory : MonoBehaviour
 
         NewItemSelected();
     }
-
-
 }
-
 
 public interface IPickable
 {
     void PickItem();
+}
+
+public enum itemTypeInv
+{
+    Zeus,
+    LancaCocos,
+    Rigon,
+    Health
 }

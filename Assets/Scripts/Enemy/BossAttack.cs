@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class BossAttack : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class BossAttack : MonoBehaviour
     bool alreadyAttacked;
     public GameObject projectile;
     public GameObject powerfulProjectile; // Novo projétil mais poderoso
-    public float powerfulProjectileDamage = 50f; // Dano do projétil mais poderoso
+    public float powerfulProjectileDamage = 30f; // Dano do projétil mais poderoso
 
     // States
     public float sightRange, attackRange;
@@ -28,15 +29,25 @@ public class BossAttack : MonoBehaviour
     private float powerfulProjectileCooldown = 12f;
     private bool canShootPowerfulProjectile = true;
 
-        public AudioClip bulletSound;
+    public AudioSource bulletAudioSource; // Referência ao AudioSource para o som do projétil
     public float bulletSoundVolume = 1.0f; // Volume da bala ajustável
-    private AudioSource audioSource;
+
+    public GameObject explosionEffect; // Referência ao prefab de explosão
+
+    private bool hasExploded = false; // Variável para garantir que a explosão ocorra uma vez
 
     private void Awake()
     {
         player = GameObject.Find("AngryJohn").transform;
         agent = GetComponent<NavMeshAgent>();
-                audioSource = gameObject.AddComponent<AudioSource>();
+
+        // Adicione um novo AudioSource se não houver nenhum atribuído
+        if (bulletAudioSource == null)
+        {
+            bulletAudioSource = gameObject.AddComponent<AudioSource>();
+            bulletAudioSource.volume = bulletSoundVolume;
+            bulletAudioSource.playOnAwake = false;
+        }
     }
 
     private void Update()
@@ -83,25 +94,26 @@ public class BossAttack : MonoBehaviour
 
     private void AttackPlayer()
     {
-        // Make sure enemy doesn't move
-        agent.SetDestination(transform.position);
-
-        transform.LookAt(player);
+        // Certifique-se de que o inimigo está olhando para o jogador
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
         if (!alreadyAttacked)
         {
             if (canShootPowerfulProjectile)
             {
-                ShootPowerfulProjectile();
+                ShootPowerfulProjectile(directionToPlayer);
             }
             else
             {
-                ShootRegularProjectile();
-                                    // Play the bullet sound
-            if (bulletSound != null && audioSource != null)
-            {
-                audioSource.PlayOneShot(bulletSound, bulletSoundVolume);
-            }
+                ShootRegularProjectile(directionToPlayer);
+
+                // Play the bullet sound
+                if (bulletAudioSource != null && bulletAudioSource.clip != null)
+                {
+                    bulletAudioSource.Play();
+                }
             }
 
             alreadyAttacked = true;
@@ -109,63 +121,62 @@ public class BossAttack : MonoBehaviour
         }
     }
 
-    private void ShootRegularProjectile()
+    private void ShootRegularProjectile(Vector3 directionToPlayer)
     {
-        Vector3 spawnPosition = transform.position + transform.forward * 1.5f + transform.up * 1.0f; // Adjust the offset as needed
-        GameObject newProjectile = Instantiate(projectile, spawnPosition, Quaternion.identity);
+        Vector3 spawnPosition = transform.position + transform.forward * 2.0f; // Ajuste para uma posição segura
+        Vector3 elevatedDirection = (directionToPlayer + Vector3.up * 0.1f).normalized; // Adiciona uma elevação à direção
+        GameObject newProjectile = Instantiate(projectile, spawnPosition, Quaternion.LookRotation(elevatedDirection));
         Rigidbody rb = newProjectile.GetComponent<Rigidbody>();
 
-        // Disable collider momentarily to avoid immediate collision with the enemy
+        // Desativar o collider inicialmente
         Collider projectileCollider = newProjectile.GetComponent<Collider>();
         if (projectileCollider != null)
         {
             projectileCollider.enabled = false;
-            StartCoroutine(ReenableColliderAfterDelay(newProjectile, 0.1f));
+            StartCoroutine(EnableColliderAfterDelay(projectileCollider, 0.1f));
         }
 
-        // Adjust the direction to shoot slightly downward
-        Vector3 forceDirection = transform.forward + transform.up * -0.1f; // Adjust the -0.1f to control how much downward force is applied
-        rb.AddForce(forceDirection.normalized * 32f, ForceMode.Impulse);
+        // Ajuste a direção para atirar diretamente para o jogador
+        rb.velocity = elevatedDirection * 32f;
 
         Destroy(newProjectile, 5f);
     }
 
-    private void ShootPowerfulProjectile()
+    private void ShootPowerfulProjectile(Vector3 directionToPlayer)
     {
-        Vector3 spawnPosition = transform.position + transform.forward * 1.5f + transform.up * 1.0f; // Adjust the offset as needed
-        GameObject newProjectile = Instantiate(powerfulProjectile, spawnPosition, Quaternion.identity);
+        Vector3 spawnPosition = transform.position + transform.forward * 2.0f; // Ajuste para uma posição segura
+        Vector3 elevatedDirection = (directionToPlayer + Vector3.up * 0.1f).normalized; // Adiciona uma elevação à direção
+        GameObject newProjectile = Instantiate(powerfulProjectile, spawnPosition, Quaternion.LookRotation(elevatedDirection));
         Rigidbody rb = newProjectile.GetComponent<Rigidbody>();
 
-        // Disable collider momentarily to avoid immediate collision with the enemy
+        // Desativar o collider inicialmente
         Collider projectileCollider = newProjectile.GetComponent<Collider>();
         if (projectileCollider != null)
         {
             projectileCollider.enabled = false;
-            StartCoroutine(ReenableColliderAfterDelay(newProjectile, 0.1f));
+            StartCoroutine(EnableColliderAfterDelay(projectileCollider, 0.1f));
         }
 
-        // Adjust the direction to shoot slightly downward
-        Vector3 forceDirection = transform.forward + transform.up * -0.1f; // Adjust the -0.1f to control how much downward force is applied
-        rb.AddForce(forceDirection.normalized * 32f, ForceMode.Impulse);
+        // Ajuste a direção para atirar diretamente para o jogador
+        rb.velocity = elevatedDirection * 32f;
 
         Destroy(newProjectile, 5f);
         canShootPowerfulProjectile = false;
         Invoke(nameof(ResetPowerfulProjectileCooldown), powerfulProjectileCooldown);
     }
 
+    private IEnumerator EnableColliderAfterDelay(Collider collider, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (collider != null)
+        {
+            collider.enabled = true;
+        }
+    }
+
     private void ResetPowerfulProjectileCooldown()
     {
         canShootPowerfulProjectile = true;
-    }
-
-    private IEnumerator ReenableColliderAfterDelay(GameObject projectile, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Collider projectileCollider = projectile.GetComponent<Collider>();
-        if (projectileCollider != null)
-        {
-            projectileCollider.enabled = true;
-        }
     }
 
     private void ResetAttack()
@@ -177,21 +188,33 @@ public class BossAttack : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        if (health <= 0 && !hasExploded) // Verifica se o Boss já foi destruído
+        {
+            hasExploded = true;
+            Invoke(nameof(DestroyEnemy), 0.5f);
+            SceneManager.LoadScene("CutScene 1");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "JohnBullet")
         {
-            if (collision.gameObject.tag == "JohnBullet")
-            {
-                //myAnimation.SetTrigger("");
-                TakeDamage(50);
-                //hurtSound.Play();
-            }
+            TakeDamage(50);
         }
+        else if (collision.gameObject.tag == "BulletExplosive")
+        {
+            TakeDamage(100);
+        }
+    }
 
     private void DestroyEnemy()
     {
+        if (explosionEffect != null)
+        {
+            GameObject explosionInstance = Instantiate(explosionEffect, transform.position, transform.rotation); // Instancia o efeito de explosão
+            Destroy(explosionInstance, 3f); // Destrói o efeito de explosão após 3 segundos
+        }
         Destroy(gameObject);
     }
 

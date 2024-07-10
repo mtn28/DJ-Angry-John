@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd3d18e76abc2e49aef3f9ef04eac28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cutsceneSceneName: Nivel1
+  cutsceneSceneName: CutScene
   mainMenuScreen: {fileID: 593526040}
   optionsScreen: {fileID: 1371860750}
 --- !u!114 &1245950931
