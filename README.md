@@ -22,13 +22,15 @@
 ## 🔍 How to Play
 
 1. **⬇️ Download and Install:**
-   - Download the game from the provided [WebGL](#) link or download the executable for your platform.
-2. **🎮 Controls:**
+   - [Download the game here](https://drive.usercontent.google.com/download?id=1jCPcqxp651h3_S37O7Idj8s5RjJ0KaOM&export=download&authuser=0) for your platform.
+2. **🎮 Play Online:**
+   - [Play the WebGL version](https://angry-john.vercel.app/) directly in your browser.
+3. **🎮 Controls:**
    - **WASD** for movement.
    - **Space** for jumping.
    - **Left Click** for attacks.
    - **Shift** for dodging.
-3. **🏆 Objective:**
+4. **🏆 Objective:**
    - Rescue John’s friends, defeat robots, and restore the jungle’s life energy.
 
 ## 💻 Installation
