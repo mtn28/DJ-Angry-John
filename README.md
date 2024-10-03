@@ -60,6 +60,3 @@
 ### 👥 Team:
 - This project was developed by a team of students in the **Game Development** course at the Polytechnic Institute of Viseu.
 
-## 📜 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
